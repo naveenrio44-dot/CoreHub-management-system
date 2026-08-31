@@ -1,0 +1,4411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoreHub Company Portal</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root{
+    --primary:#2563eb;
+    --primary-dark:#1d4ed8;
+    --bg:#f5f7fb;
+    --white:#fff;
+    --text:#172033;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --sidebar:#111827;
+    --success:#16a34a;
+    --warning:#d97706;
+    --danger:#dc2626;
+    --shadow:0 8px 30px rgba(15,23,42,.06);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* ================= LOGIN ================= */
+
+.login-screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        linear-gradient(135deg,#eef4ff,#f8fafc);
+    padding:20px;
+}
+
+.login-box{
+    width:420px;
+    max-width:100%;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:38px;
+    box-shadow:0 20px 60px rgba(15,23,42,.10);
+}
+
+.login-logo{
+    text-align:center;
+    font-size:27px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.login-logo span{
+    color:var(--primary);
+}
+
+.login-subtitle{
+    text-align:center;
+    color:var(--muted);
+    font-size:14px;
+    margin-bottom:30px;
+}
+
+.login-group{
+    margin-bottom:18px;
+}
+
+.login-group label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:7px;
+}
+
+.login-group input{
+    width:100%;
+    padding:13px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    outline:none;
+}
+
+.login-group input:focus{
+    border-color:var(--primary);
+}
+
+.password-box{
+    position:relative;
+}
+
+.password-box button{
+    position:absolute;
+    right:8px;
+    top:7px;
+    border:0;
+    background:none;
+    cursor:pointer;
+    padding:7px;
+    color:var(--muted);
+}
+
+.remember{
+    display:flex;
+    gap:8px;
+    font-size:13px;
+    margin:10px 0 20px;
+}
+
+.login-btn{
+    width:100%;
+    border:0;
+    padding:13px;
+    border-radius:8px;
+    background:var(--primary);
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.login-btn:hover{
+    background:var(--primary-dark);
+}
+
+.login-error{
+    display:none;
+    background:#fee2e2;
+    color:#991b1b;
+    border-radius:8px;
+    padding:10px;
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+.demo-login{
+    margin-top:22px;
+    padding:13px;
+    background:#f8fafc;
+    border-radius:8px;
+    font-size:12px;
+    color:var(--muted);
+    text-align:center;
+}
+
+/* ================= APP ================= */
+
+.app{
+    display:none;
+}
+
+.sidebar{
+    position:fixed;
+    width:245px;
+    left:0;
+    top:0;
+    height:100vh;
+    background:var(--sidebar);
+    color:#fff;
+    padding:20px 13px;
+    z-index:1000;
+    overflow-y:auto;
+}
+
+.logo{
+    font-size:23px;
+    font-weight:800;
+    padding:5px 12px 25px;
+}
+
+.logo span{
+    color:#60a5fa;
+}
+
+.nav-title{
+    color:#6b7280;
+    font-size:10px;
+    text-transform:uppercase;
+    margin:20px 12px 8px;
+}
+
+.nav-item{
+    padding:11px 13px;
+    border-radius:8px;
+    margin:3px 0;
+    cursor:pointer;
+    color:#cbd5e1;
+    font-size:13px;
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.nav-item:hover,
+.nav-item.active{
+    background:#2563eb;
+    color:#fff;
+}
+
+.nav-icon{
+    width:20px;
+    text-align:center;
+}
+
+.main{
+    margin-left:245px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 28px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.search{
+    width:330px;
+    padding:10px 13px;
+    background:#f3f4f6;
+    border:1px solid var(--border);
+    border-radius:8px;
+    outline:none;
+}
+
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.notification{
+    position:relative;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.notification-count{
+    position:absolute;
+    right:-8px;
+    top:-6px;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:var(--danger);
+    color:white;
+    font-size:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.user-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:37px;
+    height:37px;
+    background:#dbeafe;
+    color:var(--primary);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.content{
+    padding:28px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.page-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:24px;
+}
+
+.page-header h1{
+    font-size:25px;
+}
+
+.page-header p{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:5px;
+}
+
+.btn{
+    border:0;
+    padding:10px 15px;
+    border-radius:7px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:600;
+}
+
+.btn-primary{
+    background:var(--primary);
+    color:white;
+}
+
+.btn-primary:hover{
+    background:var(--primary-dark);
+}
+
+.btn-secondary{
+    background:#fff;
+    border:1px solid var(--border);
+    color:var(--text);
+}
+
+.btn-danger{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.btn-success{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.btn-small{
+    padding:6px 9px;
+    font-size:11px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:17px;
+    margin-bottom:20px;
+}
+
+.card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:20px;
+    box-shadow:var(--shadow);
+}
+
+.stat{
+    display:flex;
+    justify-content:space-between;
+}
+
+.stat-title{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.stat-number{
+    font-size:28px;
+    font-weight:800;
+    margin:8px 0;
+}
+
+.stat-change{
+    color:var(--success);
+    font-size:11px;
+}
+
+.stat-icon{
+    width:43px;
+    height:43px;
+    border-radius:9px;
+    background:#eff6ff;
+    color:var(--primary);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:19px;
+}
+
+.grid-2{
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:20px;
+}
+
+.grid-3{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.chart-box{
+    height:290px;
+}
+
+.card-title{
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:18px;
+}
+
+.table-card{
+    margin-top:20px;
+}
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    text-align:left;
+    background:#f9fafb;
+    color:#6b7280;
+    font-size:11px;
+    padding:13px;
+    border-bottom:1px solid var(--border);
+}
+
+td{
+    padding:13px;
+    font-size:12px;
+    border-bottom:1px solid var(--border);
+}
+
+.action-buttons{
+    display:flex;
+    gap:5px;
+}
+
+.status{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:700;
+}
+
+.status-active{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.status-pending{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.status-completed{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.status-danger{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.progress{
+    width:100%;
+    height:7px;
+    background:#e5e7eb;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    background:var(--primary);
+}
+
+/* PROJECT CARDS */
+
+.project-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.project-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:20px;
+}
+
+.project-card h3{
+    font-size:16px;
+    margin-bottom:7px;
+}
+
+.project-card p{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:15px;
+}
+
+.project-meta{
+    display:flex;
+    justify-content:space-between;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:9px;
+}
+
+/* FORM */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    width:100%;
+    padding:10px;
+    border:1px solid var(--border);
+    border-radius:7px;
+    outline:none;
+    background:#fff;
+}
+
+.form-group textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    z-index:3000;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    background:#fff;
+    width:650px;
+    max-width:100%;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:12px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.close{
+    font-size:23px;
+    color:var(--muted);
+    cursor:pointer;
+}
+
+/* ACTIVITY */
+
+.activity{
+    display:flex;
+    gap:12px;
+    padding:13px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.activity-dot{
+    width:8px;
+    height:8px;
+    margin-top:5px;
+    border-radius:50%;
+    background:var(--primary);
+}
+
+.activity-text{
+    font-size:13px;
+}
+
+.activity-time{
+    font-size:10px;
+    color:var(--muted);
+    margin-top:4px;
+}
+
+/* MOBILE */
+
+.mobile-menu{
+    display:none;
+    font-size:20px;
+    cursor:pointer;
+}
+
+@media(max-width:1050px){
+
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.25s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+    }
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .grid-2,
+    .project-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    .content{
+        padding:17px;
+    }
+
+    .topbar{
+        padding:0 17px;
+    }
+
+    .search{
+        display:none;
+    }
+
+    .cards,
+    .grid-3,
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .page-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+
+<!-- =====================================================
+LOGIN
+===================================================== -->
+
+<div class="login-screen" id="loginScreen">
+
+    <div class="login-box">
+
+        <div class="login-logo">
+            Core<span>Hub</span>
+        </div>
+
+        <div class="login-subtitle">
+            Company Management Portal
+        </div>
+
+        <div class="login-error" id="loginError">
+            Invalid username or password.
+        </div>
+
+        <div class="login-group">
+
+            <label>Username</label>
+
+            <input
+                id="loginUsername"
+                type="text"
+                placeholder="Enter username"
+                autocomplete="username"
+            >
+
+        </div>
+
+        <div class="login-group">
+
+            <label>Password</label>
+
+            <div class="password-box">
+
+                <input
+                    id="loginPassword"
+                    type="password"
+                    placeholder="Enter password"
+                    autocomplete="current-password"
+                >
+
+                <button onclick="togglePassword()">Show</button>
+
+            </div>
+
+        </div>
+
+        <label class="remember">
+
+            <input type="checkbox" id="rememberMe">
+
+            Remember me
+
+        </label>
+
+        <button class="login-btn" onclick="login()">
+            Sign In
+        </button>
+
+        <div class="demo-login">
+            Demo: <strong>admin</strong> /
+            <strong>Admin@123</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+APPLICATION
+===================================================== -->
+
+<div class="app" id="app">
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+        Core<span>Hub</span>
+    </div>
+
+    <div class="nav-title">Main</div>
+
+    <div class="nav-item active"
+         onclick="showPage('dashboard',this)">
+        <span class="nav-icon">▦</span>
+        Dashboard
+    </div>
+
+    <div class="nav-item"
+         onclick="showPage('portal',this)">
+        <span class="nav-icon">◉</span>
+        Portal
+    </div>
+
+    <div class="nav-item"
+         onclick="showPage('projects',this)">
+        <span class="nav-icon">▣</span>
+        Projects
+    </div>
+
+    <div class="nav-item"
+         onclick="showPage('companies',this)">
+        <span class="nav-icon">▤</span>
+        Companies
+    </div>
+
+    <div class="nav-item"
+         onclick="showPage('branches',this)">
+        <span class="nav-icon">⌂</span>
+        Branches
+    </div>
+
+    <div class="nav-item"
+         onclick="showPage('employees',this)">
+        <span class="nav-icon">♙</span>
+        Employees
+    </div>
+
+    <div class="nav-title">Management</div>
+
+    <div class="nav-item"
+         onclick="showPage('tasks',this)">
+        <span class="nav-icon">✓</span>
+        Tasks
+    </div>
+
+    <div class="nav-item"
+         onclick="showPage('departments',this)">
+        <span class="nav-icon">♟</span>
+        Departments
+    </div>
+
+    <div class="nav-item"
+         onclick="showPage('documents',this)">
+        <span class="nav-icon">□</span>
+        Documents
+    </div>
+
+    <div class="nav-item"
+         onclick="showPage('analytics',this)">
+        <span class="nav-icon">◔</span>
+        Analytics
+    </div>
+
+    <div class="nav-item"
+         onclick="showPage('reports',this)">
+        <span class="nav-icon">▥</span>
+        Reports
+    </div>
+
+    <div class="nav-title">System</div>
+
+    <div class="nav-item"
+         onclick="showPage('notifications',this)">
+        <span class="nav-icon">♢</span>
+        Notifications
+    </div>
+
+    <div class="nav-item"
+         onclick="showPage('settings',this)">
+        <span class="nav-icon">⚙</span>
+        Settings
+    </div>
+
+    <div class="nav-item"
+         onclick="logout()"
+         style="margin-top:15px;color:#fca5a5">
+        <span class="nav-icon">↪</span>
+        Logout
+    </div>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div style="display:flex;align-items:center;gap:18px">
+
+        <div class="mobile-menu"
+             onclick="toggleSidebar()">
+            ☰
+        </div>
+
+        <input
+            class="search"
+            id="globalSearch"
+            placeholder="Search..."
+            onkeyup="globalSearch()"
+        >
+
+    </div>
+
+    <div class="top-right">
+
+        <div class="notification">
+            ♢
+            <div class="notification-count">4</div>
+        </div>
+
+        <div class="user-box">
+
+            <div class="avatar" id="userAvatar">
+                AD
+            </div>
+
+            <div>
+                <strong id="userName"
+                        style="font-size:12px">
+                    Admin
+                </strong>
+
+                <div style="font-size:10px;color:#6b7280">
+                    Administrator
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<div class="content">
+
+
+<!-- =====================================================
+DASHBOARD
+===================================================== -->
+
+<section class="page active" id="dashboard">
+
+<div class="page-header">
+
+    <div>
+        <h1>Dashboard</h1>
+        <p>Company performance overview.</p>
+    </div>
+
+    <button class="btn btn-primary"
+            onclick="openProjectModal()">
+        + New Project
+    </button>
+
+</div>
+
+
+<div class="cards">
+
+    <div class="card stat">
+
+        <div>
+            <div class="stat-title">Revenue</div>
+            <div class="stat-number">₹24.8L</div>
+            <div class="stat-change">↑ 12.5%</div>
+        </div>
+
+        <div class="stat-icon">₹</div>
+
+    </div>
+
+
+    <div class="card stat">
+
+        <div>
+            <div class="stat-title">Projects</div>
+            <div class="stat-number"
+                 id="dashboardProjects">
+                0
+            </div>
+            <div class="stat-change">Active projects</div>
+        </div>
+
+        <div class="stat-icon">▣</div>
+
+    </div>
+
+
+    <div class="card stat">
+
+        <div>
+            <div class="stat-title">Employees</div>
+            <div class="stat-number"
+                 id="dashboardEmployees">
+                0
+            </div>
+            <div class="stat-change">Company employees</div>
+        </div>
+
+        <div class="stat-icon">♙</div>
+
+    </div>
+
+
+    <div class="card stat">
+
+        <div>
+            <div class="stat-title">Companies</div>
+            <div class="stat-number"
+                 id="dashboardCompanies">
+                0
+            </div>
+            <div class="stat-change">Business partners</div>
+        </div>
+
+        <div class="stat-icon">▤</div>
+
+    </div>
+
+</div>
+
+
+<div class="grid-2">
+
+    <div class="card">
+
+        <div class="card-title">
+            Revenue Overview
+        </div>
+
+        <div class="chart-box">
+            <canvas id="revenueChart"></canvas>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            Employee Distribution
+        </div>
+
+        <div class="chart-box">
+            <canvas id="employeePieChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card table-card">
+
+    <div class="card-title">
+        Recent Projects
+    </div>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Project</th>
+                    <th>Company</th>
+                    <th>Manager</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="dashboardProjectTable"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+PORTAL
+===================================================== -->
+
+<section class="page" id="portal">
+
+<div class="page-header">
+
+    <div>
+        <h1>Company Portal</h1>
+        <p>Central workspace for your organization.</p>
+    </div>
+
+</div>
+
+
+<div class="grid-3">
+
+    <div class="card">
+        <div class="stat-icon">▣</div>
+        <h3 style="margin-top:15px">Projects</h3>
+        <p style="color:#6b7280;font-size:12px;margin-top:7px">
+            Create and manage company projects.
+        </p>
+        <button class="btn btn-secondary"
+                style="margin-top:15px"
+                onclick="showPage('projects')">
+            Open
+        </button>
+    </div>
+
+
+    <div class="card">
+        <div class="stat-icon">♙</div>
+        <h3 style="margin-top:15px">Employees</h3>
+        <p style="color:#6b7280;font-size:12px;margin-top:7px">
+            Manage staff and organization roles.
+        </p>
+        <button class="btn btn-secondary"
+                style="margin-top:15px"
+                onclick="showPage('employees')">
+            Open
+        </button>
+    </div>
+
+
+    <div class="card">
+        <div class="stat-icon">▤</div>
+        <h3 style="margin-top:15px">Companies</h3>
+        <p style="color:#6b7280;font-size:12px;margin-top:7px">
+            Manage customers and partners.
+        </p>
+        <button class="btn btn-secondary"
+                style="margin-top:15px"
+                onclick="showPage('companies')">
+            Open
+        </button>
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+PROJECTS
+===================================================== -->
+
+<section class="page" id="projects">
+
+<div class="page-header">
+
+    <div>
+        <h1>Projects</h1>
+        <p>Create, edit and delete projects.</p>
+    </div>
+
+    <button class="btn btn-primary"
+            onclick="openProjectModal()">
+        + Create Project
+    </button>
+
+</div>
+
+<div class="project-grid"
+     id="projectGrid">
+</div>
+
+</section>
+
+
+<!-- =====================================================
+COMPANIES
+===================================================== -->
+
+<section class="page" id="companies">
+
+<div class="page-header">
+
+    <div>
+        <h1>Companies</h1>
+        <p>Manage business partners and clients.</p>
+    </div>
+
+    <button class="btn btn-primary"
+            onclick="openCompanyModal()">
+        + Add Company
+    </button>
+
+</div>
+
+
+<div class="card">
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+<tr>
+<th>Company</th>
+<th>Industry</th>
+<th>Contact</th>
+<th>Projects</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="companyTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+BRANCHES
+===================================================== -->
+
+<section class="page" id="branches">
+
+<div class="page-header">
+
+    <div>
+        <h1>Branches</h1>
+        <p>Manage company offices and locations.</p>
+    </div>
+
+    <button class="btn btn-primary"
+            onclick="openBranchModal()">
+        + Add Branch
+    </button>
+
+</div>
+
+
+<div class="card">
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+<tr>
+<th>Branch</th>
+<th>City</th>
+<th>Manager</th>
+<th>Employees</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="branchTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+EMPLOYEES
+===================================================== -->
+
+<section class="page" id="employees">
+
+<div class="page-header">
+
+    <div>
+        <h1>Employees</h1>
+        <p>Add, edit, search and remove employees.</p>
+    </div>
+
+    <button class="btn btn-primary"
+            onclick="openEmployeeModal()">
+        + Add Employee
+    </button>
+
+</div>
+
+
+<div class="card">
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Department</th>
+<th>Role</th>
+<th>Branch</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="employeeTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+TASKS
+===================================================== -->
+
+<section class="page" id="tasks">
+
+<div class="page-header">
+
+    <div>
+        <h1>Tasks</h1>
+        <p>Assign and track company tasks.</p>
+    </div>
+
+    <button class="btn btn-primary"
+            onclick="openTaskModal()">
+        + Add Task
+    </button>
+
+</div>
+
+
+<div class="card">
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+<tr>
+<th>Task</th>
+<th>Project</th>
+<th>Assigned To</th>
+<th>Due Date</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="taskTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+DEPARTMENTS
+===================================================== -->
+
+<section class="page" id="departments">
+
+<div class="page-header">
+
+    <div>
+        <h1>Departments</h1>
+        <p>Manage company departments.</p>
+    </div>
+
+    <button class="btn btn-primary"
+            onclick="openDepartmentModal()">
+        + Add Department
+    </button>
+
+</div>
+
+
+<div class="grid-3"
+     id="departmentGrid">
+</div>
+
+</section>
+
+
+<!-- =====================================================
+DOCUMENTS
+===================================================== -->
+
+<section class="page" id="documents">
+
+<div class="page-header">
+
+    <div>
+        <h1>Documents</h1>
+        <p>Company document management.</p>
+    </div>
+
+    <button class="btn btn-primary"
+            onclick="uploadDocument()">
+        + Upload Document
+    </button>
+
+</div>
+
+
+<div class="card">
+
+<table>
+
+<thead>
+<tr>
+<th>Document</th>
+<th>Type</th>
+<th>Owner</th>
+<th>Date</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="documentTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+ANALYTICS
+===================================================== -->
+
+<section class="page" id="analytics">
+
+<div class="page-header">
+
+    <div>
+        <h1>Analytics</h1>
+        <p>Company performance and workforce analytics.</p>
+    </div>
+
+</div>
+
+
+<div class="grid-2">
+
+<div class="card">
+
+    <div class="card-title">
+        Project Status
+    </div>
+
+    <div class="chart-box">
+        <canvas id="projectPieChart"></canvas>
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-title">
+        Employees by Department
+    </div>
+
+    <div class="chart-box">
+        <canvas id="departmentBarChart"></canvas>
+    </div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+REPORTS
+===================================================== -->
+
+<section class="page" id="reports">
+
+<div class="page-header">
+
+    <div>
+        <h1>Reports</h1>
+        <p>Generate company reports.</p>
+    </div>
+
+    <button class="btn btn-primary"
+            onclick="printReport()">
+        Print Report
+    </button>
+
+</div>
+
+
+<div class="grid-3">
+
+<div class="card">
+
+    <h3>Employee Report</h3>
+
+    <p style="color:#6b7280;font-size:12px;margin:8px 0 17px">
+        Complete employee directory.
+    </p>
+
+    <button class="btn btn-secondary"
+            onclick="employeeReport()">
+        Generate
+    </button>
+
+</div>
+
+
+<div class="card">
+
+    <h3>Project Report</h3>
+
+    <p style="color:#6b7280;font-size:12px;margin:8px 0 17px">
+        Project progress and status.
+    </p>
+
+    <button class="btn btn-secondary"
+            onclick="projectReport()">
+        Generate
+    </button>
+
+</div>
+
+
+<div class="card">
+
+    <h3>Company Report</h3>
+
+    <p style="color:#6b7280;font-size:12px;margin:8px 0 17px">
+        Companies and business partners.
+    </p>
+
+    <button class="btn btn-secondary"
+            onclick="companyReport()">
+        Generate
+    </button>
+
+</div>
+
+</div>
+
+<div class="card table-card">
+
+    <div class="card-title">
+        Report Summary
+    </div>
+
+    <div id="reportOutput">
+        Select a report above.
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+NOTIFICATIONS
+===================================================== -->
+
+<section class="page" id="notifications">
+
+<div class="page-header">
+
+    <div>
+        <h1>Notifications</h1>
+        <p>Recent system activity.</p>
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="activity">
+        <div class="activity-dot"></div>
+        <div>
+            <div class="activity-text">
+                New project created.
+            </div>
+            <div class="activity-time">
+                10 minutes ago
+            </div>
+        </div>
+    </div>
+
+    <div class="activity">
+        <div class="activity-dot"></div>
+        <div>
+            <div class="activity-text">
+                Employee profile updated.
+            </div>
+            <div class="activity-time">
+                1 hour ago
+            </div>
+        </div>
+    </div>
+
+    <div class="activity">
+        <div class="activity-dot"></div>
+        <div>
+            <div class="activity-text">
+                Monthly report is ready.
+            </div>
+            <div class="activity-time">
+                3 hours ago
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+SETTINGS
+===================================================== -->
+
+<section class="page" id="settings">
+
+<div class="page-header">
+
+    <div>
+        <h1>Settings</h1>
+        <p>Manage company portal settings.</p>
+    </div>
+
+</div>
+
+
+<div class="card">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Company Name</label>
+<input id="settingCompany"
+       value="CoreHub Technologies">
+</div>
+
+<div class="form-group">
+<label>Company Email</label>
+<input id="settingEmail"
+       value="admin@corehub.com">
+</div>
+
+<div class="form-group">
+<label>Phone</label>
+<input value="+91 98765 43210">
+</div>
+
+<div class="form-group">
+<label>Timezone</label>
+<select>
+<option>Asia/Kolkata</option>
+<option>UTC</option>
+<option>Asia/Singapore</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label>Address</label>
+<textarea>Chennai, Tamil Nadu, India</textarea>
+</div>
+
+<div class="full">
+<button class="btn btn-primary"
+        onclick="saveSettings()">
+Save Settings
+</button>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+</div>
+</main>
+
+</div>
+
+
+<!-- =====================================================
+PROJECT MODAL
+===================================================== -->
+
+<div class="modal" id="projectModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h2 id="projectModalTitle">Create Project</h2>
+<span class="close"
+      onclick="closeModal('projectModal')">×</span>
+</div>
+
+<div class="form-grid">
+
+<div class="form-group full">
+<label>Project Name</label>
+<input id="projectName">
+</div>
+
+<div class="form-group">
+<label>Company</label>
+<select id="projectCompany"></select>
+</div>
+
+<div class="form-group">
+<label>Manager</label>
+<select id="projectManager"></select>
+</div>
+
+<div class="form-group">
+<label>Progress %</label>
+<input id="projectProgress"
+       type="number"
+       min="0"
+       max="100"
+       value="0">
+</div>
+
+<div class="form-group">
+<label>Status</label>
+<select id="projectStatus">
+<option>In Progress</option>
+<option>Pending</option>
+<option>Completed</option>
+<option>On Hold</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label>Description</label>
+<textarea id="projectDescription"></textarea>
+</div>
+
+<div class="full">
+
+<button class="btn btn-primary"
+        onclick="saveProject()">
+Save Project
+</button>
+
+<button class="btn btn-secondary"
+        onclick="closeModal('projectModal')">
+Cancel
+</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =====================================================
+EMPLOYEE MODAL
+===================================================== -->
+
+<div class="modal" id="employeeModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h2 id="employeeModalTitle">Add Employee</h2>
+<span class="close"
+      onclick="closeModal('employeeModal')">×</span>
+</div>
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Full Name</label>
+<input id="employeeName">
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input id="employeeEmail">
+</div>
+
+<div class="form-group">
+<label>Department</label>
+<select id="employeeDepartment"></select>
+</div>
+
+<div class="form-group">
+<label>Role</label>
+<input id="employeeRole">
+</div>
+
+<div class="form-group">
+<label>Branch</label>
+<select id="employeeBranch"></select>
+</div>
+
+<div class="form-group">
+<label>Status</label>
+<select id="employeeStatus">
+<option>Active</option>
+<option>Inactive</option>
+</select>
+</div>
+
+<div class="full">
+
+<button class="btn btn-primary"
+        onclick="saveEmployee()">
+Save Employee
+</button>
+
+<button class="btn btn-secondary"
+        onclick="closeModal('employeeModal')">
+Cancel
+</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =====================================================
+COMPANY MODAL
+===================================================== -->
+
+<div class="modal" id="companyModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h2 id="companyModalTitle">Add Company</h2>
+<span class="close"
+      onclick="closeModal('companyModal')">×</span>
+</div>
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Company Name</label>
+<input id="companyName">
+</div>
+
+<div class="form-group">
+<label>Industry</label>
+<input id="companyIndustry">
+</div>
+
+<div class="form-group">
+<label>Contact Email</label>
+<input id="companyContact">
+</div>
+
+<div class="form-group">
+<label>Projects</label>
+<input id="companyProjects"
+       type="number"
+       value="0">
+</div>
+
+<div class="form-group">
+<label>Status</label>
+<select id="companyStatus">
+<option>Active</option>
+<option>Pending</option>
+<option>Inactive</option>
+</select>
+</div>
+
+<div class="full">
+
+<button class="btn btn-primary"
+        onclick="saveCompany()">
+Save Company
+</button>
+
+<button class="btn btn-secondary"
+        onclick="closeModal('companyModal')">
+Cancel
+</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =====================================================
+BRANCH MODAL
+===================================================== -->
+
+<div class="modal" id="branchModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h2 id="branchModalTitle">Add Branch</h2>
+<span class="close"
+      onclick="closeModal('branchModal')">×</span>
+</div>
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Branch Name</label>
+<input id="branchName">
+</div>
+
+<div class="form-group">
+<label>City</label>
+<input id="branchCity">
+</div>
+
+<div class="form-group">
+<label>Manager</label>
+<input id="branchManager">
+</div>
+
+<div class="form-group">
+<label>Employees</label>
+<input id="branchEmployees"
+       type="number"
+       value="0">
+</div>
+
+<div class="form-group">
+<label>Status</label>
+<select id="branchStatus">
+<option>Active</option>
+<option>Inactive</option>
+</select>
+</div>
+
+<div class="full">
+
+<button class="btn btn-primary"
+        onclick="saveBranch()">
+Save Branch
+</button>
+
+<button class="btn btn-secondary"
+        onclick="closeModal('branchModal')">
+Cancel
+</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =====================================================
+TASK MODAL
+===================================================== -->
+
+<div class="modal" id="taskModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h2 id="taskModalTitle">Add Task</h2>
+<span class="close"
+      onclick="closeModal('taskModal')">×</span>
+</div>
+
+<div class="form-grid">
+
+<div class="form-group full">
+<label>Task Name</label>
+<input id="taskName">
+</div>
+
+<div class="form-group">
+<label>Project</label>
+<select id="taskProject"></select>
+</div>
+
+<div class="form-group">
+<label>Assigned To</label>
+<select id="taskEmployee"></select>
+</div>
+
+<div class="form-group">
+<label>Due Date</label>
+<input id="taskDue"
+       type="date">
+</div>
+
+<div class="form-group">
+<label>Status</label>
+<select id="taskStatus">
+<option>Pending</option>
+<option>In Progress</option>
+<option>Completed</option>
+</select>
+</div>
+
+<div class="full">
+
+<button class="btn btn-primary"
+        onclick="saveTask()">
+Save Task
+</button>
+
+<button class="btn btn-secondary"
+        onclick="closeModal('taskModal')">
+Cancel
+</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =====================================================
+DEPARTMENT MODAL
+===================================================== -->
+
+<div class="modal" id="departmentModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h2>Add Department</h2>
+<span class="close"
+      onclick="closeModal('departmentModal')">×</span>
+</div>
+
+<div class="form-group">
+<label>Department Name</label>
+<input id="departmentName">
+</div>
+
+<br>
+
+<button class="btn btn-primary"
+        onclick="saveDepartment()">
+Save Department
+</button>
+
+<button class="btn btn-secondary"
+        onclick="closeModal('departmentModal')">
+Cancel
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+DATA
+===================================================== */
+
+let employees = JSON.parse(
+    localStorage.getItem("employees")
+) || [
+
+    {
+        id:1,
+        name:"Rahul Sharma",
+        email:"rahul@corehub.com",
+        department:"Technology",
+        role:"Project Manager",
+        branch:"Chennai HQ",
+        status:"Active"
+    },
+
+    {
+        id:2,
+        name:"Anita Kumar",
+        email:"anita@corehub.com",
+        department:"Design",
+        role:"UI/UX Designer",
+        branch:"Bangalore",
+        status:"Active"
+    },
+
+    {
+        id:3,
+        name:"Arjun Rao",
+        email:"arjun@corehub.com",
+        department:"Sales",
+        role:"Sales Manager",
+        branch:"Mumbai",
+        status:"Active"
+    },
+
+    {
+        id:4,
+        name:"Priya Menon",
+        email:"priya@corehub.com",
+        department:"HR",
+        role:"HR Manager",
+        branch:"Chennai HQ",
+        status:"Active"
+    }
+
+];
+
+
+let companies = JSON.parse(
+    localStorage.getItem("companies")
+) || [
+
+    {
+        id:1,
+        name:"Nova Technologies",
+        industry:"Technology",
+        contact:"contact@nova.com",
+        projects:8,
+        status:"Active"
+    },
+
+    {
+        id:2,
+        name:"Vertex Solutions",
+        industry:"Consulting",
+        contact:"hello@vertex.com",
+        projects:5,
+        status:"Active"
+    },
+
+    {
+        id:3,
+        name:"Acme Industries",
+        industry:"Manufacturing",
+        contact:"admin@acme.com",
+        projects:3,
+        status:"Pending"
+    }
+
+];
+
+
+let branches = JSON.parse(
+    localStorage.getItem("branches")
+) || [
+
+    {
+        id:1,
+        name:"Chennai HQ",
+        city:"Chennai",
+        manager:"Rahul Sharma",
+        employees:82,
+        status:"Active"
+    },
+
+    {
+        id:2,
+        name:"Bangalore Branch",
+        city:"Bangalore",
+        manager:"Anita Kumar",
+        employees:54,
+        status:"Active"
+    },
+
+    {
+        id:3,
+        name:"Mumbai Branch",
+        city:"Mumbai",
+        manager:"Arjun Rao",
+        employees:50,
+        status:"Active"
+    }
+
+];
+
+
+let projects = JSON.parse(
+    localStorage.getItem("projects")
+) || [
+
+    {
+        id:1,
+        name:"Website Redesign",
+        company:"Nova Technologies",
+        manager:"Rahul Sharma",
+        progress:85,
+        status:"In Progress",
+        description:"Corporate website redesign."
+    },
+
+    {
+        id:2,
+        name:"Mobile Application",
+        company:"Vertex Solutions",
+        manager:"Anita Kumar",
+        progress:64,
+        status:"In Progress",
+        description:"Business mobile application."
+    },
+
+    {
+        id:3,
+        name:"CRM Implementation",
+        company:"Acme Industries",
+        manager:"Arjun Rao",
+        progress:42,
+        status:"Pending",
+        description:"Customer management system."
+    },
+
+    {
+        id:4,
+        name:"Cloud Migration",
+        company:"Nova Technologies",
+        manager:"Priya Menon",
+        progress:100,
+        status:"Completed",
+        description:"Infrastructure migration."
+    }
+
+];
+
+
+let tasks = JSON.parse(
+    localStorage.getItem("tasks")
+) || [
+
+    {
+        id:1,
+        name:"Homepage UI",
+        project:"Website Redesign",
+        employee:"Anita Kumar",
+        due:"2026-09-05",
+        status:"In Progress"
+    },
+
+    {
+        id:2,
+        name:"API Integration",
+        project:"Mobile Application",
+        employee:"Rahul Sharma",
+        due:"2026-09-08",
+        status:"Pending"
+    },
+
+    {
+        id:3,
+        name:"Testing",
+        project:"CRM Implementation",
+        employee:"Arjun Rao",
+        due:"2026-09-12",
+        status:"Completed"
+    }
+
+];
+
+
+let departments = JSON.parse(
+    localStorage.getItem("departments")
+) || [
+
+    {id:1,name:"Technology"},
+    {id:2,name:"Design"},
+    {id:3,name:"Sales"},
+    {id:4,name:"HR"},
+    {id:5,name:"Marketing"},
+    {id:6,name:"Finance"},
+    {id:7,name:"Operations"}
+
+];
+
+
+let documents = JSON.parse(
+    localStorage.getItem("documents")
+) || [
+
+    {
+        id:1,
+        name:"Company Policy.pdf",
+        type:"PDF",
+        owner:"HR Department",
+        date:"Today"
+    },
+
+    {
+        id:2,
+        name:"Project Requirements.docx",
+        type:"DOCX",
+        owner:"Rahul Sharma",
+        date:"Yesterday"
+    },
+
+    {
+        id:3,
+        name:"Financial Report.xlsx",
+        type:"XLSX",
+        owner:"Finance",
+        date:"Aug 28, 2026"
+    }
+
+];
+
+
+/* =====================================================
+SAVE DATA
+===================================================== */
+
+function saveData(){
+
+    localStorage.setItem(
+        "employees",
+        JSON.stringify(employees)
+    );
+
+    localStorage.setItem(
+        "companies",
+        JSON.stringify(companies)
+    );
+
+    localStorage.setItem(
+        "branches",
+        JSON.stringify(branches)
+    );
+
+    localStorage.setItem(
+        "projects",
+        JSON.stringify(projects)
+    );
+
+    localStorage.setItem(
+        "tasks",
+        JSON.stringify(tasks)
+    );
+
+    localStorage.setItem(
+        "departments",
+        JSON.stringify(departments)
+    );
+
+    localStorage.setItem(
+        "documents",
+        JSON.stringify(documents)
+    );
+
+}
+
+
+/* =====================================================
+LOGIN
+===================================================== */
+
+function login(){
+
+    const username =
+        document.getElementById("loginUsername").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const error =
+        document.getElementById("loginError");
+
+
+    if(
+        username === "Siva" &&
+        password === "Siva@123"
+    ){
+
+        document.getElementById("loginScreen")
+            .style.display="none";
+
+        document.getElementById("app")
+            .style.display="block";
+
+        document.getElementById("userName")
+            .textContent="Admin User";
+
+        document.getElementById("userAvatar")
+            .textContent="AD";
+
+        if(
+            document.getElementById("rememberMe").checked
+        ){
+            localStorage.setItem(
+                "corehubLoggedIn",
+                "true"
+            );
+        }
+
+        error.style.display="none";
+
+        renderAll();
+
+    }else{
+
+        error.style.display="block";
+
+    }
+
+}
+
+
+function logout(){
+
+    localStorage.removeItem(
+        "corehubLoggedIn"
+    );
+
+    document.getElementById("app")
+        .style.display="none";
+
+    document.getElementById("loginScreen")
+        .style.display="flex";
+
+    document.getElementById("loginPassword")
+        .value="";
+
+}
+
+
+function togglePassword(){
+
+    const input =
+        document.getElementById("loginPassword");
+
+    input.type =
+        input.type === "password"
+        ? "text"
+        : "password";
+
+}
+
+
+/* =====================================================
+NAVIGATION
+===================================================== */
+
+function showPage(id, element){
+
+    document.querySelectorAll(".page")
+        .forEach(p => p.classList.remove("active"));
+
+    const page =
+        document.getElementById(id);
+
+    if(page){
+        page.classList.add("active");
+    }
+
+    document.querySelectorAll(".nav-item")
+        .forEach(n => n.classList.remove("active"));
+
+    if(element){
+        element.classList.add("active");
+    }
+
+    document.getElementById("sidebar")
+        .classList.remove("open");
+
+    renderAll();
+
+}
+
+
+function toggleSidebar(){
+
+    document.getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+/* =====================================================
+MODAL
+===================================================== */
+
+function closeModal(id){
+
+    document.getElementById(id)
+        .classList.remove("show");
+
+}
+
+
+/* =====================================================
+PROJECTS
+===================================================== */
+
+let editProjectId=null;
+
+
+function openProjectModal(id=null){
+
+    editProjectId=id;
+
+    populateProjectSelects();
+
+    if(id){
+
+        const p =
+            projects.find(x => x.id === id);
+
+        document.getElementById("projectModalTitle")
+            .textContent="Edit Project";
+
+        document.getElementById("projectName")
+            .value=p.name;
+
+        document.getElementById("projectCompany")
+            .value=p.company;
+
+        document.getElementById("projectManager")
+            .value=p.manager;
+
+        document.getElementById("projectProgress")
+            .value=p.progress;
+
+        document.getElementById("projectStatus")
+            .value=p.status;
+
+        document.getElementById("projectDescription")
+            .value=p.description;
+
+    }else{
+
+        document.getElementById("projectModalTitle")
+            .textContent="Create Project";
+
+        document.getElementById("projectName")
+            .value="";
+
+        document.getElementById("projectProgress")
+            .value=0;
+
+        document.getElementById("projectDescription")
+            .value="";
+
+    }
+
+    document.getElementById("projectModal")
+        .classList.add("show");
+
+}
+
+
+function saveProject(){
+
+    const name =
+        document.getElementById("projectName")
+            .value.trim();
+
+    if(!name){
+
+        alert("Enter project name.");
+
+        return;
+
+    }
+
+    const data={
+
+        name:name,
+
+        company:
+            document.getElementById("projectCompany").value,
+
+        manager:
+            document.getElementById("projectManager").value,
+
+        progress:
+            Number(document.getElementById("projectProgress").value),
+
+        status:
+            document.getElementById("projectStatus").value,
+
+        description:
+            document.getElementById("projectDescription").value
+
+    };
+
+
+    if(editProjectId){
+
+        const index =
+            projects.findIndex(
+                p => p.id === editProjectId
+            );
+
+        projects[index] = {
+            id:editProjectId,
+            ...data
+        };
+
+    }else{
+
+        projects.push({
+            id:Date.now(),
+            ...data
+        });
+
+    }
+
+    saveData();
+
+    closeModal("projectModal");
+
+    renderAll();
+
+}
+
+
+function deleteProject(id){
+
+    if(!confirm("Delete this project?")) return;
+
+    projects =
+        projects.filter(p => p.id !== id);
+
+    tasks =
+        tasks.filter(
+            t => {
+                const project =
+                    projects.find(
+                        p => p.name === t.project
+                    );
+                return project !== undefined;
+            }
+        );
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =====================================================
+COMPANIES
+===================================================== */
+
+let editCompanyId=null;
+
+
+function openCompanyModal(id=null){
+
+    editCompanyId=id;
+
+    if(id){
+
+        const c =
+            companies.find(x => x.id === id);
+
+        document.getElementById("companyModalTitle")
+            .textContent="Edit Company";
+
+        document.getElementById("companyName")
+            .value=c.name;
+
+        document.getElementById("companyIndustry")
+            .value=c.industry;
+
+        document.getElementById("companyContact")
+            .value=c.contact;
+
+        document.getElementById("companyProjects")
+            .value=c.projects;
+
+        document.getElementById("companyStatus")
+            .value=c.status;
+
+    }else{
+
+        document.getElementById("companyModalTitle")
+            .textContent="Add Company";
+
+        document.getElementById("companyName")
+            .value="";
+
+        document.getElementById("companyIndustry")
+            .value="";
+
+        document.getElementById("companyContact")
+            .value="";
+
+        document.getElementById("companyProjects")
+            .value=0;
+
+        document.getElementById("companyStatus")
+            .value="Active";
+
+    }
+
+    document.getElementById("companyModal")
+        .classList.add("show");
+
+}
+
+
+function saveCompany(){
+
+    const name =
+        document.getElementById("companyName")
+            .value.trim();
+
+    if(!name){
+
+        alert("Enter company name.");
+
+        return;
+
+    }
+
+    const data={
+
+        name:name,
+
+        industry:
+            document.getElementById("companyIndustry").value,
+
+        contact:
+            document.getElementById("companyContact").value,
+
+        projects:
+            Number(document.getElementById("companyProjects").value),
+
+        status:
+            document.getElementById("companyStatus").value
+
+    };
+
+
+    if(editCompanyId){
+
+        const index =
+            companies.findIndex(
+                c => c.id === editCompanyId
+            );
+
+        companies[index]={
+            id:editCompanyId,
+            ...data
+        };
+
+    }else{
+
+        companies.push({
+            id:Date.now(),
+            ...data
+        });
+
+    }
+
+    saveData();
+
+    closeModal("companyModal");
+
+    renderAll();
+
+}
+
+
+function deleteCompany(id){
+
+    if(!confirm("Delete this company?")) return;
+
+    companies =
+        companies.filter(
+            c => c.id !== id
+        );
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =====================================================
+EMPLOYEES
+===================================================== */
+
+let editEmployeeId=null;
+
+
+function openEmployeeModal(id=null){
+
+    editEmployeeId=id;
+
+    populateEmployeeSelects();
+
+    if(id){
+
+        const e =
+            employees.find(x => x.id === id);
+
+        document.getElementById("employeeModalTitle")
+            .textContent="Edit Employee";
+
+        document.getElementById("employeeName")
+            .value=e.name;
+
+        document.getElementById("employeeEmail")
+            .value=e.email;
+
+        document.getElementById("employeeDepartment")
+            .value=e.department;
+
+        document.getElementById("employeeRole")
+            .value=e.role;
+
+        document.getElementById("employeeBranch")
+            .value=e.branch;
+
+        document.getElementById("employeeStatus")
+            .value=e.status;
+
+    }else{
+
+        document.getElementById("employeeModalTitle")
+            .textContent="Add Employee";
+
+        document.getElementById("employeeName")
+            .value="";
+
+        document.getElementById("employeeEmail")
+            .value="";
+
+        document.getElementById("employeeRole")
+            .value="";
+
+        document.getElementById("employeeStatus")
+            .value="Active";
+
+    }
+
+    document.getElementById("employeeModal")
+        .classList.add("show");
+
+}
+
+
+function saveEmployee(){
+
+    const name =
+        document.getElementById("employeeName")
+            .value.trim();
+
+    const email =
+        document.getElementById("employeeEmail")
+            .value.trim();
+
+    if(!name || !email){
+
+        alert("Name and email are required.");
+
+        return;
+
+    }
+
+    const data={
+
+        name:name,
+
+        email:email,
+
+        department:
+            document.getElementById("employeeDepartment").value,
+
+        role:
+            document.getElementById("employeeRole").value,
+
+        branch:
+            document.getElementById("employeeBranch").value,
+
+        status:
+            document.getElementById("employeeStatus").value
+
+    };
+
+
+    if(editEmployeeId){
+
+        const index =
+            employees.findIndex(
+                e => e.id === editEmployeeId
+            );
+
+        employees[index]={
+            id:editEmployeeId,
+            ...data
+        };
+
+    }else{
+
+        employees.push({
+            id:Date.now(),
+            ...data
+        });
+
+    }
+
+    saveData();
+
+    closeModal("employeeModal");
+
+    renderAll();
+
+}
+
+
+function deleteEmployee(id){
+
+    if(!confirm("Delete this employee?")) return;
+
+    employees =
+        employees.filter(
+            e => e.id !== id
+        );
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =====================================================
+BRANCHES
+===================================================== */
+
+let editBranchId=null;
+
+
+function openBranchModal(id=null){
+
+    editBranchId=id;
+
+    if(id){
+
+        const b =
+            branches.find(x => x.id === id);
+
+        document.getElementById("branchModalTitle")
+            .textContent="Edit Branch";
+
+        document.getElementById("branchName")
+            .value=b.name;
+
+        document.getElementById("branchCity")
+            .value=b.city;
+
+        document.getElementById("branchManager")
+            .value=b.manager;
+
+        document.getElementById("branchEmployees")
+            .value=b.employees;
+
+        document.getElementById("branchStatus")
+            .value=b.status;
+
+    }else{
+
+        document.getElementById("branchModalTitle")
+            .textContent="Add Branch";
+
+        document.getElementById("branchName")
+            .value="";
+
+        document.getElementById("branchCity")
+            .value="";
+
+        document.getElementById("branchManager")
+            .value="";
+
+        document.getElementById("branchEmployees")
+            .value=0;
+
+        document.getElementById("branchStatus")
+            .value="Active";
+
+    }
+
+    document.getElementById("branchModal")
+        .classList.add("show");
+
+}
+
+
+function saveBranch(){
+
+    const name =
+        document.getElementById("branchName")
+            .value.trim();
+
+    if(!name){
+
+        alert("Enter branch name.");
+
+        return;
+
+    }
+
+    const data={
+
+        name:name,
+
+        city:
+            document.getElementById("branchCity").value,
+
+        manager:
+            document.getElementById("branchManager").value,
+
+        employees:
+            Number(document.getElementById("branchEmployees").value),
+
+        status:
+            document.getElementById("branchStatus").value
+
+    };
+
+
+    if(editBranchId){
+
+        const index =
+            branches.findIndex(
+                b => b.id === editBranchId
+            );
+
+        branches[index]={
+            id:editBranchId,
+            ...data
+        };
+
+    }else{
+
+        branches.push({
+            id:Date.now(),
+            ...data
+        });
+
+    }
+
+    saveData();
+
+    closeModal("branchModal");
+
+    renderAll();
+
+}
+
+
+function deleteBranch(id){
+
+    if(!confirm("Delete this branch?")) return;
+
+    branches =
+        branches.filter(
+            b => b.id !== id
+        );
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =====================================================
+TASKS
+===================================================== */
+
+let editTaskId=null;
+
+
+function openTaskModal(id=null){
+
+    editTaskId=id;
+
+    populateTaskSelects();
+
+    if(id){
+
+        const t =
+            tasks.find(x => x.id === id);
+
+        document.getElementById("taskModalTitle")
+            .textContent="Edit Task";
+
+        document.getElementById("taskName")
+            .value=t.name;
+
+        document.getElementById("taskProject")
+            .value=t.project;
+
+        document.getElementById("taskEmployee")
+            .value=t.employee;
+
+        document.getElementById("taskDue")
+            .value=t.due;
+
+        document.getElementById("taskStatus")
+            .value=t.status;
+
+    }else{
+
+        document.getElementById("taskModalTitle")
+            .textContent="Add Task";
+
+        document.getElementById("taskName")
+            .value="";
+
+        document.getElementById("taskDue")
+            .value="";
+
+        document.getElementById("taskStatus")
+            .value="Pending";
+
+    }
+
+    document.getElementById("taskModal")
+        .classList.add("show");
+
+}
+
+
+function saveTask(){
+
+    const name =
+        document.getElementById("taskName")
+            .value.trim();
+
+    if(!name){
+
+        alert("Enter task name.");
+
+        return;
+
+    }
+
+    const data={
+
+        name:name,
+
+        project:
+            document.getElementById("taskProject").value,
+
+        employee:
+            document.getElementById("taskEmployee").value,
+
+        due:
+            document.getElementById("taskDue").value,
+
+        status:
+            document.getElementById("taskStatus").value
+
+    };
+
+
+    if(editTaskId){
+
+        const index =
+            tasks.findIndex(
+                t => t.id === editTaskId
+            );
+
+        tasks[index]={
+            id:editTaskId,
+            ...data
+        };
+
+    }else{
+
+        tasks.push({
+            id:Date.now(),
+            ...data
+        });
+
+    }
+
+    saveData();
+
+    closeModal("taskModal");
+
+    renderAll();
+
+}
+
+
+function deleteTask(id){
+
+    if(!confirm("Delete this task?")) return;
+
+    tasks =
+        tasks.filter(
+            t => t.id !== id
+        );
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =====================================================
+DEPARTMENTS
+===================================================== */
+
+function openDepartmentModal(){
+
+    document.getElementById("departmentName")
+        .value="";
+
+    document.getElementById("departmentModal")
+        .classList.add("show");
+
+}
+
+
+function saveDepartment(){
+
+    const name =
+        document.getElementById("departmentName")
+            .value.trim();
+
+    if(!name) return;
+
+    departments.push({
+        id:Date.now(),
+        name:name
+    });
+
+    saveData();
+
+    closeModal("departmentModal");
+
+    renderAll();
+
+}
+
+
+function deleteDepartment(id){
+
+    if(!confirm("Delete department?")) return;
+
+    departments =
+        departments.filter(
+            d => d.id !== id
+        );
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =====================================================
+SELECT OPTIONS
+===================================================== */
+
+function populateProjectSelects(){
+
+    const companySelect =
+        document.getElementById("projectCompany");
+
+    const managerSelect =
+        document.getElementById("projectManager");
+
+    companySelect.innerHTML =
+        companies.map(
+            c => `<option>${escapeHTML(c.name)}</option>`
+        ).join("");
+
+    managerSelect.innerHTML =
+        employees.map(
+            e => `<option>${escapeHTML(e.name)}</option>`
+        ).join("");
+
+}
+
+
+function populateEmployeeSelects(){
+
+    const department =
+        document.getElementById("employeeDepartment");
+
+    const branch =
+        document.getElementById("employeeBranch");
+
+    department.innerHTML =
+        departments.map(
+            d => `<option>${escapeHTML(d.name)}</option>`
+        ).join("");
+
+    branch.innerHTML =
+        branches.map(
+            b => `<option>${escapeHTML(b.name)}</option>`
+        ).join("");
+
+}
+
+
+function populateTaskSelects(){
+
+    const project =
+        document.getElementById("taskProject");
+
+    const employee =
+        document.getElementById("taskEmployee");
+
+    project.innerHTML =
+        projects.map(
+            p => `<option>${escapeHTML(p.name)}</option>`
+        ).join("");
+
+    employee.innerHTML =
+        employees.map(
+            e => `<option>${escapeHTML(e.name)}</option>`
+        ).join("");
+
+}
+
+
+/* =====================================================
+RENDER EMPLOYEES
+===================================================== */
+
+function renderEmployees(){
+
+    const table =
+        document.getElementById("employeeTable");
+
+    table.innerHTML =
+        employees.map(e => `
+
+<tr>
+
+<td><strong>${escapeHTML(e.name)}</strong></td>
+
+<td>${escapeHTML(e.email)}</td>
+
+<td>${escapeHTML(e.department)}</td>
+
+<td>${escapeHTML(e.role)}</td>
+
+<td>${escapeHTML(e.branch)}</td>
+
+<td>
+<span class="status ${
+    e.status === "Active"
+    ? "status-active"
+    : "status-danger"
+}">
+${escapeHTML(e.status)}
+</span>
+</td>
+
+<td>
+
+<div class="action-buttons">
+
+<button
+class="btn btn-small btn-secondary"
+onclick="openEmployeeModal(${e.id})">
+Edit
+</button>
+
+<button
+class="btn btn-small btn-danger"
+onclick="deleteEmployee(${e.id})">
+Delete
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+`).join("");
+
+}
+
+
+/* =====================================================
+RENDER COMPANIES
+===================================================== */
+
+function renderCompanies(){
+
+    const table =
+        document.getElementById("companyTable");
+
+    table.innerHTML =
+        companies.map(c => `
+
+<tr>
+
+<td><strong>${escapeHTML(c.name)}</strong></td>
+
+<td>${escapeHTML(c.industry)}</td>
+
+<td>${escapeHTML(c.contact)}</td>
+
+<td>${c.projects}</td>
+
+<td>
+<span class="status ${
+    c.status === "Active"
+    ? "status-active"
+    : "status-pending"
+}">
+${escapeHTML(c.status)}
+</span>
+</td>
+
+<td>
+
+<div class="action-buttons">
+
+<button
+class="btn btn-small btn-secondary"
+onclick="openCompanyModal(${c.id})">
+Edit
+</button>
+
+<button
+class="btn btn-small btn-danger"
+onclick="deleteCompany(${c.id})">
+Delete
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+`).join("");
+
+}
+
+
+/* =====================================================
+RENDER BRANCHES
+===================================================== */
+
+function renderBranches(){
+
+    const table =
+        document.getElementById("branchTable");
+
+    table.innerHTML =
+        branches.map(b => `
+
+<tr>
+
+<td><strong>${escapeHTML(b.name)}</strong></td>
+
+<td>${escapeHTML(b.city)}</td>
+
+<td>${escapeHTML(b.manager)}</td>
+
+<td>${b.employees}</td>
+
+<td>
+<span class="status ${
+    b.status === "Active"
+    ? "status-active"
+    : "status-danger"
+}">
+${escapeHTML(b.status)}
+</span>
+</td>
+
+<td>
+
+<div class="action-buttons">
+
+<button
+class="btn btn-small btn-secondary"
+onclick="openBranchModal(${b.id})">
+Edit
+</button>
+
+<button
+class="btn btn-small btn-danger"
+onclick="deleteBranch(${b.id})">
+Delete
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+`).join("");
+
+}
+
+
+/* =====================================================
+RENDER PROJECTS
+===================================================== */
+
+function renderProjects(){
+
+    const grid =
+        document.getElementById("projectGrid");
+
+    grid.innerHTML =
+        projects.map(p => `
+
+<div class="project-card">
+
+<h3>${escapeHTML(p.name)}</h3>
+
+<p>${escapeHTML(p.description || "")}</p>
+
+<span class="status ${
+    p.status === "Completed"
+    ? "status-completed"
+    : p.status === "Pending"
+    ? "status-pending"
+    : "status-active"
+}">
+${escapeHTML(p.status)}
+</span>
+
+<div style="margin-top:15px">
+
+<div class="progress">
+
+<div
+class="progress-bar"
+style="width:${p.progress}%">
+</div>
+
+</div>
+
+</div>
+
+<div class="project-meta">
+
+<span>${p.progress}% complete</span>
+
+<span>${escapeHTML(p.manager)}</span>
+
+</div>
+
+<div style="margin-top:16px">
+
+<button
+class="btn btn-small btn-secondary"
+onclick="openProjectModal(${p.id})">
+Edit
+</button>
+
+<button
+class="btn btn-small btn-danger"
+onclick="deleteProject(${p.id})">
+Delete
+</button>
+
+</div>
+
+</div>
+
+`).join("");
+
+
+    document.getElementById("dashboardProjectTable")
+        .innerHTML =
+        projects.slice(0,5).map(p => `
+
+<tr>
+
+<td>${escapeHTML(p.name)}</td>
+
+<td>${escapeHTML(p.company)}</td>
+
+<td>${escapeHTML(p.manager)}</td>
+
+<td>${p.progress}%</td>
+
+<td>
+<span class="status ${
+    p.status === "Completed"
+    ? "status-completed"
+    : p.status === "Pending"
+    ? "status-pending"
+    : "status-active"
+}">
+${escapeHTML(p.status)}
+</span>
+</td>
+
+</tr>
+
+`).join("");
+
+}
+
+
+/* =====================================================
+RENDER TASKS
+===================================================== */
+
+function renderTasks(){
+
+    const table =
+        document.getElementById("taskTable");
+
+    table.innerHTML =
+        tasks.map(t => `
+
+<tr>
+
+<td><strong>${escapeHTML(t.name)}</strong></td>
+
+<td>${escapeHTML(t.project)}</td>
+
+<td>${escapeHTML(t.employee)}</td>
+
+<td>${escapeHTML(t.due || "-")}</td>
+
+<td>
+<span class="status ${
+    t.status === "Completed"
+    ? "status-completed"
+    : t.status === "Pending"
+    ? "status-pending"
+    : "status-active"
+}">
+${escapeHTML(t.status)}
+</span>
+</td>
+
+<td>
+
+<div class="action-buttons">
+
+<button
+class="btn btn-small btn-secondary"
+onclick="openTaskModal(${t.id})">
+Edit
+</button>
+
+<button
+class="btn btn-small btn-danger"
+onclick="deleteTask(${t.id})">
+Delete
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+`).join("");
+
+}
+
+
+/* =====================================================
+RENDER DEPARTMENTS
+===================================================== */
+
+function renderDepartments(){
+
+    const grid =
+        document.getElementById("departmentGrid");
+
+    grid.innerHTML =
+        departments.map(d => {
+
+            const count =
+                employees.filter(
+                    e => e.department === d.name
+                ).length;
+
+            return `
+
+<div class="card">
+
+<h3>${escapeHTML(d.name)}</h3>
+
+<p style="color:#6b7280;margin-top:8px;font-size:12px">
+${count} employees
+</p>
+
+<button
+class="btn btn-small btn-danger"
+style="margin-top:15px"
+onclick="deleteDepartment(${d.id})">
+Delete
+</button>
+
+</div>
+
+`;
+
+        }).join("");
+
+}
+
+
+/* =====================================================
+DOCUMENTS
+===================================================== */
+
+function renderDocuments(){
+
+    const table =
+        document.getElementById("documentTable");
+
+    table.innerHTML =
+        documents.map(d => `
+
+<tr>
+
+<td>${escapeHTML(d.name)}</td>
+
+<td>${escapeHTML(d.type)}</td>
+
+<td>${escapeHTML(d.owner)}</td>
+
+<td>${escapeHTML(d.date)}</td>
+
+<td>
+
+<button
+class="btn btn-small btn-danger"
+onclick="deleteDocument(${d.id})">
+Delete
+</button>
+
+</td>
+
+</tr>
+
+`).join("");
+
+}
+
+
+function uploadDocument(){
+
+    const name =
+        prompt("Enter document name:");
+
+    if(!name) return;
+
+    const extension =
+        name.includes(".")
+        ? name.split(".").pop().toUpperCase()
+        : "FILE";
+
+    documents.push({
+
+        id:Date.now(),
+
+        name:name,
+
+        type:extension,
+
+        owner:"Admin User",
+
+        date:new Date().toLocaleDateString()
+
+    });
+
+    saveData();
+
+    renderDocuments();
+
+}
+
+
+function deleteDocument(id){
+
+    if(!confirm("Delete document?")) return;
+
+    documents =
+        documents.filter(
+            d => d.id !== id
+        );
+
+    saveData();
+
+    renderDocuments();
+
+}
+
+
+/* =====================================================
+DASHBOARD
+===================================================== */
+
+function updateDashboard(){
+
+    document.getElementById("dashboardProjects")
+        .textContent=projects.length;
+
+    document.getElementById("dashboardEmployees")
+        .textContent=employees.length;
+
+    document.getElementById("dashboardCompanies")
+        .textContent=companies.length;
+
+}
+
+
+/* =====================================================
+CHARTS
+===================================================== */
+
+let revenueChart;
+let employeePieChart;
+let projectPieChart;
+let departmentBarChart;
+
+
+function createCharts(){
+
+    if(revenueChart) revenueChart.destroy();
+
+    if(employeePieChart) employeePieChart.destroy();
+
+    if(projectPieChart) projectPieChart.destroy();
+
+    if(departmentBarChart) departmentBarChart.destroy();
+
+
+    revenueChart =
+        new Chart(
+            document.getElementById("revenueChart"),
+            {
+
+                type:"line",
+
+                data:{
+
+                    labels:[
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Aug"
+                    ],
+
+                    datasets:[{
+
+                        label:"Revenue",
+
+                        data:[
+                            120000,
+                            145000,
+                            138000,
+                            165000,
+                            180000,
+                            205000,
+                            220000,
+                            248000
+                        ],
+
+                        borderWidth:2,
+
+                        tension:.35
+
+                    }]
+
+                },
+
+                options:{
+                    responsive:true,
+                    maintainAspectRatio:false
+                }
+
+            }
+        );
+
+
+    const departmentNames =
+        departments.map(d => d.name);
+
+    const departmentCounts =
+        departments.map(
+            d =>
+                employees.filter(
+                    e => e.department === d.name
+                ).length
+        );
+
+
+    employeePieChart =
+        new Chart(
+            document.getElementById("employeePieChart"),
+            {
+
+                type:"pie",
+
+                data:{
+
+                    labels:departmentNames,
+
+                    datasets:[{
+
+                        data:departmentCounts,
+
+                        borderWidth:0
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    plugins:{
+                        legend:{
+                            position:"bottom"
+                        }
+                    }
+
+                }
+
+            }
+        );
+
+
+    const completed =
+        projects.filter(
+            p => p.status === "Completed"
+        ).length;
+
+    const progress =
+        projects.filter(
+            p => p.status === "In Progress"
+        ).length;
+
+    const pending =
+        projects.filter(
+            p => p.status === "Pending"
+        ).length;
+
+    const onHold =
+        projects.filter(
+            p => p.status === "On Hold"
+        ).length;
+
+
+    projectPieChart =
+        new Chart(
+            document.getElementById("projectPieChart"),
+            {
+
+                type:"doughnut",
+
+                data:{
+
+                    labels:[
+                        "Completed",
+                        "In Progress",
+                        "Pending",
+                        "On Hold"
+                    ],
+
+                    datasets:[{
+
+                        data:[
+                            completed,
+                            progress,
+                            pending,
+                            onHold
+                        ],
+
+                        borderWidth:0
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    plugins:{
+                        legend:{
+                            position:"bottom"
+                        }
+                    }
+
+                }
+
+            }
+        );
+
+
+    departmentBarChart =
+        new Chart(
+            document.getElementById("departmentBarChart"),
+            {
+
+                type:"bar",
+
+                data:{
+
+                    labels:departmentNames,
+
+                    datasets:[{
+
+                        label:"Employees",
+
+                        data:departmentCounts,
+
+                        borderWidth:0
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    plugins:{
+                        legend:{
+                            display:false
+                        }
+                    }
+
+                }
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+REPORTS
+===================================================== */
+
+function employeeReport(){
+
+    document.getElementById("reportOutput")
+        .innerHTML=`
+
+<h3>Employee Report</h3>
+
+<p style="margin:8px 0;color:#6b7280">
+Total Employees: ${employees.length}
+</p>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Name</th>
+<th>Department</th>
+<th>Role</th>
+<th>Branch</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+${employees.map(e => `
+
+<tr>
+
+<td>${escapeHTML(e.name)}</td>
+<td>${escapeHTML(e.department)}</td>
+<td>${escapeHTML(e.role)}</td>
+<td>${escapeHTML(e.branch)}</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+`;
+
+}
+
+
+function projectReport(){
+
+    document.getElementById("reportOutput")
+        .innerHTML=`
+
+<h3>Project Report</h3>
+
+<p style="margin:8px 0;color:#6b7280">
+Total Projects: ${projects.length}
+</p>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Project</th>
+<th>Company</th>
+<th>Progress</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+${projects.map(p => `
+
+<tr>
+
+<td>${escapeHTML(p.name)}</td>
+<td>${escapeHTML(p.company)}</td>
+<td>${p.progress}%</td>
+<td>${escapeHTML(p.status)}</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+`;
+
+}
+
+
+function companyReport(){
+
+    document.getElementById("reportOutput")
+        .innerHTML=`
+
+<h3>Company Report</h3>
+
+<p style="margin:8px 0;color:#6b7280">
+Total Companies: ${companies.length}
+</p>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Company</th>
+<th>Industry</th>
+<th>Projects</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+${companies.map(c => `
+
+<tr>
+
+<td>${escapeHTML(c.name)}</td>
+<td>${escapeHTML(c.industry)}</td>
+<td>${c.projects}</td>
+<td>${escapeHTML(c.status)}</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+`;
+
+}
+
+
+function printReport(){
+
+    window.print();
+
+}
+
+
+/* =====================================================
+SETTINGS
+===================================================== */
+
+function saveSettings(){
+
+    localStorage.setItem(
+        "companyName",
+        document.getElementById("settingCompany").value
+    );
+
+    localStorage.setItem(
+        "companyEmail",
+        document.getElementById("settingEmail").value
+    );
+
+    alert("Settings saved successfully.");
+
+}
+
+
+/* =====================================================
+SEARCH
+===================================================== */
+
+function globalSearch(){
+
+    const search =
+        document.getElementById("globalSearch")
+            .value
+            .toLowerCase()
+            .trim();
+
+    if(!search) return;
+
+
+    const employee =
+        employees.find(
+            e =>
+                e.name.toLowerCase().includes(search) ||
+                e.email.toLowerCase().includes(search)
+        );
+
+    if(employee){
+
+        showPage("employees");
+
+        return;
+
+    }
+
+
+    const company =
+        companies.find(
+            c =>
+                c.name.toLowerCase().includes(search)
+        );
+
+    if(company){
+
+        showPage("companies");
+
+        return;
+
+    }
+
+
+    const project =
+        projects.find(
+            p =>
+                p.name.toLowerCase().includes(search)
+        );
+
+    if(project){
+
+        showPage("projects");
+
+        return;
+
+    }
+
+}
+
+
+/* =====================================================
+SECURITY
+===================================================== */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+RENDER ALL
+===================================================== */
+
+function renderAll(){
+
+    saveData();
+
+    renderEmployees();
+
+    renderCompanies();
+
+    renderBranches();
+
+    renderProjects();
+
+    renderTasks();
+
+    renderDepartments();
+
+    renderDocuments();
+
+    updateDashboard();
+
+    createCharts();
+
+}
+
+
+/* =====================================================
+START
+===================================================== */
+
+window.addEventListener("load",function(){
+
+    const loggedIn =
+        localStorage.getItem(
+            "corehubLoggedIn"
+        );
+
+    if(loggedIn === "true"){
+
+        document.getElementById("loginScreen")
+            .style.display="none";
+
+        document.getElementById("app")
+            .style.display="block";
+
+    }
+
+    renderAll();
+
+});
+
+</script>
+
+</body>
+</html> 
